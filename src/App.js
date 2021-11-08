@@ -43,6 +43,7 @@ function App() {
     video.onloadeddata = async (event) => { 
       console.log("video data loaded, we're in"); 
       const predictions = await model.estimateHands(document.querySelector("video"));
+      console.log(predictions);
       if (predictions.length > 0) {
         /*
         `predictions` is an array of objects describing each detected hand, for example:
