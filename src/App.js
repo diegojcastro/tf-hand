@@ -1,7 +1,11 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import './App.css';
 
+
+
 function App() {
+  const handpose = require('@tensorflow-models/handpose');
+  require('@tensorflow/tfjs-backend-webgl');
   const [playing, setPlaying] = useState(false);
 
   const HEIGHT = 500;
@@ -28,6 +32,60 @@ function App() {
 		let video = document.getElementsByClassName('app__videoFeed')[0];
 		video.srcObject.getTracks()[0].stop();
   }
+
+  async function startHandPose() {
+    // Load the MediaPipe handpose model.
+    const model = await handpose.load();
+    // Pass in a video stream (or an image, canvas, or 3D tensor) to obtain a
+    // hand prediction from the MediaPipe graph.
+    const video = document.querySelector('video');
+    console.log(video);
+    video.onloadeddata = async (event) => { 
+      console.log("video data loaded, we're in"); 
+      const predictions = await model.estimateHands(document.querySelector("video"));
+      if (predictions.length > 0) {
+        /*
+        `predictions` is an array of objects describing each detected hand, for example:
+        [
+          {
+            handInViewConfidence: 1, // The probability of a hand being present.
+            boundingBox: { // The bounding box surrounding the hand.
+              topLeft: [162.91, -17.42],
+              bottomRight: [548.56, 368.23],
+            },
+            landmarks: [ // The 3D coordinates of each hand landmark.
+              [472.52, 298.59, 0.00],
+              [412.80, 315.64, -6.18],
+              ...
+            ],
+            annotations: { // Semantic groupings of the `landmarks` coordinates.
+              thumb: [
+                [412.80, 315.64, -6.18]
+                [350.02, 298.38, -7.14],
+                ...
+              ],
+              ...
+            }
+          }
+        ]
+        */
+    
+        for (let i = 0; i < predictions.length; i++) {
+          const keypoints = predictions[i].landmarks;
+    
+          // Log hand keypoints.
+          for (let i = 0; i < keypoints.length; i++) {
+            const [x, y, z] = keypoints[i];
+            console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (playing) startHandPose();
+  }, [playing])
 
 
   return (
