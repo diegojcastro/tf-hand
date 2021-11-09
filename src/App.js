@@ -7,6 +7,8 @@ function App() {
   const handpose = require('@tensorflow-models/handpose');
   require('@tensorflow/tfjs-backend-webgl');
   const [playing, setPlaying] = useState(false);
+  const [preds, setPreds] = useState([]);
+  const [model, setModel] = useState(null);
 
   const HEIGHT = 500;
   const WIDTH = 500;
@@ -35,7 +37,8 @@ function App() {
 
   async function startHandPose() {
     // Load the MediaPipe handpose model.
-    const model = await handpose.load();
+    // const model = await handpose.load();
+
     // Pass in a video stream (or an image, canvas, or 3D tensor) to obtain a
     // hand prediction from the MediaPipe graph.
     const video = document.querySelector('video');
@@ -85,8 +88,19 @@ function App() {
   }
 
   useEffect(() => {
-    if (playing) startHandPose();
+    const modelLoader = async () => {
+      setModel(await handpose.load());
+    }
+    if (model === null) modelLoader();
   }, [playing])
+
+  useEffect(() => {
+    if (model) {
+      console.log("This is model:");
+      console.log(model);
+      startHandPose();
+    }
+  }, [model])
 
 
   return (
