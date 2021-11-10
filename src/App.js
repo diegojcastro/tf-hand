@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react';
+import Form from './Form';
 import './App.css';
 
 
@@ -105,6 +106,7 @@ function App() {
 
   return (
     <div className="app">
+        <Form />
       <div className="app__container">
         <video
           height={HEIGHT}

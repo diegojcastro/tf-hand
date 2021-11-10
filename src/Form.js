@@ -7,7 +7,7 @@ export default function Form() {
     const name = e.target.value;
     setFormVals(prev => ({...prev, name}))
   }
-  
+
   const handleAgeChange = (e) => {
     const age = e.target.value;
     setFormVals(prev => ({...prev, age}))
@@ -19,10 +19,10 @@ export default function Form() {
         Name:
         <input type="text" value={formVals.name} onChange={handleNameChange}/>
       </label>
-      <label>
+      {formVals.name && <label>
         Age:
         <input type='number' value={formVals.age} onChange={handleAgeChange} />
-      </label>
+      </label>}
     </form>
   )
 };
