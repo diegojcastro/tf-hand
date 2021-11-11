@@ -48,6 +48,7 @@ export default function Form() {
         Date:
         <input type='date' />  
       </label>}
+      <input type='submit' value='Submit' onClick={() => console.log(formVals)}/>
       
     </form>
   )
