@@ -8,9 +8,13 @@ export default function Form() {
     setFormVals(prev => ({...prev, name}))
   }
 
-  const handleAgeChange = async (e) => {
+  const handleAgeChange = (e) => {
     const age = e.target.value;
-    await setFormVals(prev => ({...prev, age}))
+    setFormVals({name: formVals.name, age});
+  }
+
+  const handleDropChange = (e) => {
+    setFormVals(prev => ({...prev, dropdown: e.target.value}))
   }
 
   useEffect( () => {
@@ -32,14 +36,15 @@ export default function Form() {
       
       {formVals.age && <label>
         Dropdown:
-        <select name='Dropdown'>
+        <select name='Dropdown' value={formVals.dropdown} onChange={handleDropChange}>
+          <option disabled selected value>Select a num</option>
           <option value='One'>One</option>
           <option value='Two'>Two</option>
           <option value='Three'>Three</option>
         </select>
       </label>}
 
-      {formVals.dropdown && <label> 
+      {(formVals.dropdown && formVals.dropdown !== 'One') && <label> 
         Date:
         <input type='date' />  
       </label>}
